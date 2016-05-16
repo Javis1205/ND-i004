@@ -1,0 +1,125 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Calendar</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script type="text/javascript"> 
+        var day_no;
+        var days;
+        var day;
+        var month_name = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        var year;
+        var month;
+        var day_name = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+        var d;
+        window.onload = function() {
+            d = new Date();
+            day = d.getDate();
+            month = d.getMonth();  
+            year = d.getFullYear();
+            var first_date = month_name[month] + " " + 1 + " " + year;
+            var tmp = new Date(first_date).toDateString();
+            var first_day = tmp.substring(0, 3);
+            day_no = day_name.indexOf(first_day);
+            days = new Date(year, month+1, 0).getDate();
+            show_calendar();
+        }
+
+        function show_calendar(){
+
+            document.getElementById("calendar-month-year").innerHTML = month_name[month]+" "+year;
+            document.getElementById("calendar-dates").innerHTML="";
+            var table = document.createElement('table');
+            var tr = document.createElement('tr');
+            for(var c=0; c<=6; c++){
+                var td = document.createElement('td');
+                var day_name2 = ['Su','M','Tu','W','Th','F','Sa'];
+                td.setAttribute("class", "weekday");
+                td.innerHTML = day_name2[c];
+                tr.appendChild(td);
+            }
+            table.appendChild(tr);
+            tr = document.createElement('tr');
+            var c;
+            for(c=0; c<=6; c++){
+                if(c == day_no){
+                    break;
+                }
+                var td = document.createElement('td');
+                td.innerHTML = "";
+                td.setAttribute("class", "no-border");
+                tr.appendChild(td);
+            }
+            
+            var count = 1;
+            for(; c<=6; c++){
+                var td = document.createElement('td');
+                td.innerHTML = count;
+                count++;
+                tr.appendChild(td);
+            }
+            table.appendChild(tr);
+            for(var r=3; r<=7; r++){
+                tr = document.createElement('tr');
+                for(var c=0; c<=6; c++){
+                    if(count > days){
+                        table.appendChild(tr);
+                        document.getElementById("calendar-dates").appendChild(table);
+                        return 0;
+                    }
+                    var td = document.createElement('td');
+                    var currentDate = new Date();
+                    currentDay = currentDate.getDate();
+                    currentMonth = currentDate.getMonth();
+                    currentYear = currentDate.getFullYear();
+                    if(currentDay==count&&currentMonth==month&&currentYear==year)
+                        td.setAttribute("class","today");
+                    td.innerHTML = count;
+                    count++;
+                    tr.appendChild(td);
+                }
+                table.appendChild(tr);
+            }
+         
+            document.getElementById("calendar-dates").appendChild(table);
+
+        }
+
+        function moveNext() {
+            d.setDate(1); 
+            d.setMonth(d.getMonth()+1);
+            month = d.getMonth();  
+            year = d.getFullYear(); 
+            var first_day = d.toDateString().substring(0, 3);
+            day_no = day_name.indexOf(first_day);
+            days = new Date(year, month+1, 0).getDate();
+            show_calendar();
+        }
+
+        function movePrevious() {
+            d.setDate(1); 
+            d.setMonth(d.getMonth()-1);
+            month = d.getMonth();  
+            year = d.getFullYear();
+            var first_day = d.toDateString().substring(0, 3);
+            day_no = day_name.indexOf(first_day);
+            days = new Date(year, month+1, 0).getDate();
+            show_calendar();
+        }
+    </script>
+    
+</head>
+<body id="body">
+<div id="calendar-container">
+            <div id="calendar-header" style="padding-top: 60px;padding-bottom: 60px">
+                <button id="Previous" onclick="movePrevious();"></button>
+                <span id="calendar-month-year"></span>
+                <button id="Next" onclick="moveNext();"></button>
+            </div>
+            <div id="calendar-dates">
+            </div>
+        </div>
+</body>
+</html>
